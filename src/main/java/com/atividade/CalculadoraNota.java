@@ -20,7 +20,7 @@ public class CalculadoraNota {
      * das tres parciais avaliativas.
      */
     public double calcularMediaExercicios(double p1, double p2, double p3) {
-        return (p1 + p2 + p3) / 2;
+        return (p1 + p2 + p3) / 3;
     }
 
     /**
