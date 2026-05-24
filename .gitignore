@@ -1,0 +1,13 @@
+# Arquivos de build do Maven
+target/
+
+# Arquivos de IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Sistema
+.DS_Store
