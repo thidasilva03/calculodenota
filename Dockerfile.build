@@ -6,6 +6,5 @@ FROM maven:3.9-eclipse-temurin-17
 WORKDIR /app
 
 # Comando padrao do container:
-# compila o codigo e empacota o JAR. Os testes NAO sao executados aqui
-# (isso e responsabilidade do container de teste no estagio seguinte).
+# compila o codigo e empacota o JAR. Os testes NAO sao executados aqui.
 CMD ["mvn", "clean", "package", "-DskipTests", "-B"]
