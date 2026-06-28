@@ -2,10 +2,8 @@ pipeline {
     agent any
 
     triggers {
-        // Cenario 4 (nightly): executa todo dia por volta das 02h.
-        // Para uma demonstracao mais rapida no video, troque por algo
-        // mais frequente como 'H/15 * * * *' (a cada 15 minutos).
-        cron('H 2 * * *')
+        // Cenario 4 (nightly): executa a cada 15 minutos.
+        cron('H/15 * * * *')
     }
 
     stages {
