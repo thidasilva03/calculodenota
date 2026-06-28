@@ -1,0 +1,11 @@
+# Imagem para o estagio de TESTE da pipeline.
+# Mesmo toolchain do container de build, com um CMD diferente:
+# executa os casos de teste e gera o relatorio JUnit XML
+# que o Jenkins le ao final da pipeline.
+FROM maven:3.9-eclipse-temurin-17
+
+WORKDIR /app
+
+# A flag -Dmaven.test.failure.ignore=true permite ao Jenkins diferenciar
+# build INSTAVEL (Cenario 3 - teste falha) de build FALHO (Cenario 2 - nem compila).
+CMD ["mvn", "test", "-Dmaven.test.failure.ignore=true", "-B"]

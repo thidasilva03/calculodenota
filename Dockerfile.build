@@ -1,0 +1,11 @@
+# Imagem para o estagio de BUILD da pipeline.
+# Contem o toolchain Maven + JDK 17. O codigo do projeto e
+# montado em /app via volume no momento da execucao do container.
+FROM maven:3.9-eclipse-temurin-17
+
+WORKDIR /app
+
+# Comando padrao do container:
+# compila o codigo e empacota o JAR. Os testes NAO sao executados aqui
+# (isso e responsabilidade do container de teste no estagio seguinte).
+CMD ["mvn", "clean", "package", "-DskipTests", "-B"]

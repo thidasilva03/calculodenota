@@ -7,10 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Casos de teste para a CalculadoraNota.
- * Cobrem as tres linhas da tabela de regras:
- *  - ME >= 8                 -> Aprovado (dispensado da PF)
- *  - ME <  8 e MF >= 5       -> Aprovado
- *  - ME <  8 e MF <  5       -> Reprovado
+ * Exploram limites (8.0 na ME, 5.0 na MF), notas decimais,
+ * caso extremo (tudo zero) e a garantia de que a PF e ignorada
+ * quando o aluno e dispensado.
  */
 class CalculadoraNotaTest {
 
@@ -18,34 +17,40 @@ class CalculadoraNotaTest {
     private static final double DELTA = 0.0001;
 
     @Test
-    void deveCalcularMediaDosExercicios() {
-        // (7 + 8 + 9) / 3 = 8
-        assertEquals(8.0, calc.calcularMediaExercicios(7, 8, 9), DELTA);
+    void mediaExerciciosCalculaCorretamenteComNotasDecimais() {
+        // (7.5 + 8.2 + 9.1) / 3 = 8.2666...
+        assertEquals(8.2667, calc.calcularMediaExercicios(7.5, 8.2, 9.1), DELTA);
     }
 
     @Test
-    void alunoComMediaAltaNaoFazProvaFinal() {
-        assertFalse(calc.precisaFazerProvaFinal(8.0));   // ME = 8 -> dispensado
-        assertTrue(calc.precisaFazerProvaFinal(7.9));    // ME < 8 -> faz PF
+    void alunoComExatamenteOitoNaMediaEhDispensado() {
+        // ME = 8.0 (limite): dispensado da PF, MF = ME, Aprovado.
+        assertFalse(calc.precisaFazerProvaFinal(8.0));
+        assertEquals(8.0, calc.calcularMediaFinal(8.0, 0.0), DELTA);
+        assertEquals("Aprovado", calc.situacaoFinal(8.0, 0.0));
     }
 
     @Test
-    void alunoDispensadoTemMediaFinalIgualAMedia() {
-        // ME = 9 (>= 8) -> MF = ME, situacao Aprovado, PF ignorada
-        assertEquals(9.0, calc.calcularMediaFinal(9.0, 0.0), DELTA);
-        assertEquals("Aprovado", calc.situacaoFinal(9.0, 0.0));
+    void alunoComMediaFinalExatamenteCincoEhAprovado() {
+        // ME = 4.5, PF = 6.0 -> MF = (2*4.5 + 6.0)/3 = 5.0 (limite de aprovacao).
+        assertEquals(5.0, calc.calcularMediaFinal(4.5, 6.0), DELTA);
+        assertEquals("Aprovado", calc.situacaoFinal(4.5, 6.0));
     }
 
     @Test
-    void alunoComProvaFinalSuficienteEhAprovado() {
-        // ME = 6, PF = 6 -> MF = (2*6 + 6)/3 = 6 (>= 5) -> Aprovado
-        assertEquals(6.0, calc.calcularMediaFinal(6.0, 6.0), DELTA);
-        assertEquals("Aprovado", calc.situacaoFinal(6.0, 6.0));
+    void alunoComNotasZeroEhReprovado() {
+        // Caso extremo: todas as notas zeradas.
+        assertEquals(0.0, calc.calcularMediaExercicios(0, 0, 0), DELTA);
+        assertTrue(calc.precisaFazerProvaFinal(0.0));
+        assertEquals(0.0, calc.calcularMediaFinal(0.0, 0.0), DELTA);
+        assertEquals("Reprovado", calc.situacaoFinal(0.0, 0.0));
     }
 
     @Test
-    void alunoComProvaFinalInsuficienteEhReprovado() {
-        // ME = 4, PF = 3 -> MF = (2*4 + 3)/3 = 3.6667 (< 5) -> Reprovado
-        assertEquals("Reprovado", calc.situacaoFinal(4.0, 3.0));
+    void provaFinalEhIgnoradaQuandoAlunoEhDispensado() {
+        // Aluno dispensado (ME >= 8): qualquer valor de PF deve ser ignorado.
+        assertEquals(9.0, calc.calcularMediaFinal(9.0, 1.0), DELTA);
+        assertEquals(9.0, calc.calcularMediaFinal(9.0, 10.0), DELTA);
+        assertEquals("Aprovado", calc.situacaoFinal(9.5, 0.0));
     }
 }
