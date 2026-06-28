@@ -42,7 +42,7 @@ public class CalculadoraNota {
         if(me >= MEDIA_DISPENSA_PF){
             mf = me;
         } else{
-            mf = (2 * me + pf) / 3;
+            mf = (2 * me + pf) / 2;
         }
         
         return mf;
