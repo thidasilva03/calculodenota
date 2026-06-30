@@ -1,7 +1,7 @@
 # Calculadora de Nota
 
 Projeto exemplo em Java + Maven usado para demonstrar build e teste automáticos no Jenkins,
-agora orquestrados em **containers Docker isolados** (atividade de Gerência de Configuração — UFAM).
+agora orquestrados em **containers Docker isolados** (atividade de Gerência de Configuração).
 
 O Jenkins lê a definição da pipeline no `Jenkinsfile` versionado neste repositório
 e dispara dois containers em sequência: um para compilar e empacotar o JAR
